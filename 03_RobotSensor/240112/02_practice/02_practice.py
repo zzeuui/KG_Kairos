@@ -2,14 +2,17 @@ import numpy as np
 import cv2
 import serial
 import time
+import math
 
-port = "COM3"
+port = "COM4"
 baudrate = 115200
 ser = serial.Serial(port, baudrate)
 
 cap = cv2.VideoCapture(0)
 
-mode = ''
+mode = 'hsv'
+width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
 while True:
     ret, img = cap.read()
@@ -41,15 +44,21 @@ while True:
     if M['m00']:
         cx = int(M['m10']/M['m00'])
         cy = int(M['m01']/M['m00'])
-        print(cx, cy)
         cv2.circle(img, (cx, cy), 10, (0, 255, 0), -1)
-        bx=(width/2)/math.tan(math.radian(78/2))
-        by=(height/2)/math.tan(math.radian(45/2))
-        theta_x=math.degree(math.atan((cx-width/2)/bx))
-        theta_y=math.degree(math.atan((cy-height/2)/by))
-        ret = f'a{theta_x}b{theta_y}c' 
+
+        bx=(width/2)/math.tan(math.radians(78/2))
+        by=(height/2)/math.tan(math.radians(45/2))
+        theta_x=math.degrees(math.atan((cx-width/2)/bx))
+        theta_y=math.degrees(math.atan((cy-height/2)/by))
+
+        ret = f'a{theta_x}b{theta_y}c{width}d{height}e'
+        print(f'cx: {cx}, cy: {cy}, degree:{ret}') 
+
         ser.write(ret.encode())
-        time.sleep(1)
+        
+        if ser.in_waiting > 0:
+            data = ser.readline().decode()
+            print("Received data:", data)
 
     cv2.imshow('win', img)
 
