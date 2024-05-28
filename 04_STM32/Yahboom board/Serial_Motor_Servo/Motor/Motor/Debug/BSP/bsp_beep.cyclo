@@ -1,0 +1,6 @@
+../BSP/bsp_beep.c:9:13:Beep_Set_Time	1
+../BSP/bsp_beep.c:16:17:Beep_Get_Time	1
+../BSP/bsp_beep.c:23:13:Beep_Set_State	1
+../BSP/bsp_beep.c:30:16:Beep_Get_State	1
+../BSP/bsp_beep.c:37:6:Beep_On_Time	4
+../BSP/bsp_beep.c:64:6:Beep_Timeout_Close_Handle	3
